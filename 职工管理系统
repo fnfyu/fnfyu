@@ -1,8 +1,53 @@
 //
-// Created by 张欣潮，张康，邱志桐 on 2023-12-25.
+// Created by fnfyus on 2023-12-25.
 //
 
-#include"function.h"
+
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<Windows.h>
+#include<conio.h>
+#define N 1000
+enum option 
+	{
+	读入=1,
+	添加,
+	删除,
+	查找,
+	修改,
+	排序,
+	统计,
+	展示,
+	保存,
+	退出,
+};
+struct employee{
+	char id[100];
+	char name[20];
+	char gender[5];
+	char birthday[20];
+	char zhengzhimianmao[30];
+	char xueli[20];
+	char job[50];
+	char time[50];
+	char bumen[50];
+	char address[600];
+	char number[20];
+}worker[N];
+void read();
+void add();
+void delete();
+void display();
+void modify();
+void find();
+void sort();
+void statictic();
+void save();
+void huishouzhan_save();
+void init();
+void display1();
 int n = 0,size=0;
 char form[11][20] = { "职工号","姓名","性别","出生年月","政治面貌","学历","职务","参加工作时间","部门","住址","电话" };
 char xu[8][20] = { {"小学"},{"初中"},{"高中"},{"专科"},{"本科"},{"硕士"},{"博士"} };
@@ -11,6 +56,299 @@ int tiaojian[1000] = { 0 };
 char bumen[N][100];
 int bumen_num[N] = { 0 };
 struct employee huishouzhan[N];
+
+int main(){ 
+	enum option j = -1;
+	int i;
+	init();
+	printf("\033[0;30;46m按任意键进入系统......................");
+	while (1)
+	{
+		if (_kbhit())
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    查找    修改    排序    统计    展示     保存     退出   |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                         按 A / D 进行选择 选择后按回车进入功能     |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			i = _getch();
+			if (i == 'd')
+			{
+				j++;
+			}
+			else if (i == 'a')
+			{
+				j--;
+			}
+			else if (i == '\r')
+			{
+				switch (j) {
+				case 读入:
+				{
+					system("cls");
+					read();
+					break;
+				}
+				case 添加: {
+					system("cls");
+					add();
+					break;
+				}
+				case 删除: {
+					system("cls");
+					delete();
+					break;
+				}
+				case 查找: {
+					system("cls");
+					find();
+					break;
+				}
+				case 修改: {
+					system("cls");
+					modify();
+					break;
+				}
+				case 排序: {
+					system("cls");
+					sort();
+					break;
+				}
+				case 统计: {
+					system("cls");
+					statictic();
+					break;
+				}
+				case 展示: {
+					system("cls");
+					display1();
+					break;
+				}
+				case 保存: {
+					system("cls");
+					save();
+					break;
+				}
+				case 退出: {
+					huishouzhan_save();
+					return 0;
+				}
+				}
+
+			}
+			if (j == 11)
+			{
+				j--;
+			}
+			if (j == 0)
+			{
+				j++;
+			}
+		}
+		if (j == 读入)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   |读入|    添加    删除    查找    修改    排序    统计    展示    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 添加)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    |添加|    删除    查找    修改    排序    统计    展示    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 删除)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    |删除|    查找    修改    排序    统计    展示    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 查找)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    |查找|    修改    排序    统计    展示    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 修改)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    查找    |修改|    排序    统计    展示    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 排序)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    查找    修改    |排序|    统计    展示    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 统计)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    查找    修改    排序    |统计|    展示    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 展示)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    查找    修改    排序    统计    |展示|    保存     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 保存)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    查找    修改    排序    统计    展示    |保存|     退出  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+		else if (j == 退出)
+		{
+			system("cls");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			printf("               §|------------------------------------职工管理系统------------------------------------|§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|  Hi~~                                                                              |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §| -功能列表-                                                                         |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|   读入    添加    删除    查找    修改    排序    统计    展示    保存     |退出|  |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                                                    |§\n");
+			printf("               §|                                                             version:1.0            |§\n");
+			printf("               §¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤§\n");
+			Sleep(40);
+		}
+	}
+}
+
+
 void init() {
     FILE* pf = fopen("Hui_Shouzhan.data", "r+");
     if (!pf) {
