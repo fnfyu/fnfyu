@@ -1,0 +1,50 @@
+#include<bits/stdc++.h>//N在8以内dfs 12以内要剪枝 20以内要状态压缩
+using namespace std;
+int n;
+double length[20][20];
+double res[20][2];
+double dp[16][1 << 15];
+bool vis[16];
+double s = 0, ans = 114514;
+set<pair<double, double>>arr;
+void dfs(int candy, int x, int mark, double s) {
+	if (candy == n) {
+		if (s < ans)ans = s;
+		return;
+	}
+	for (int i = 1; i <= n; i++) {
+		if (vis[i])continue;
+		int tmp = mark + (1 << (i - 1));
+		if (dp[i][tmp] == 0 || dp[i][tmp] > dp[x][mark] + length[x][i]) {
+			dp[i][tmp] = dp[x][mark] + length[x][i];
+			vis[i] = 1;
+			dfs(candy + 1, i, tmp, s + length[x][i]);
+			vis[i] = 0;
+		}
+	}
+}
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		double x, y;
+		cin >> x >> y;
+		arr.insert(make_pair(x, y));
+	}
+	int p = 1;
+	n = arr.size();
+	for (auto i : arr) {
+		res[p][0] = i.first;
+		res[p][1] = i.second;
+		p++;
+	}
+	for (int i = 0; i < n; i++)
+		for (int j = i + 1; j <= n; j++) {
+			double result = sqrt((res[i][0] - res[j][0]) * (res[i][0] - res[j][0]) + ((res[i][1] - res[j][1]) * (res[i][1] - res[j][1])));
+			length[i][j] = result;
+			length[j][i] = result;
+		}
+	dfs(0, 0, 0, 0);
+	printf("%.2lf", ans);
+	return 0;
+}
